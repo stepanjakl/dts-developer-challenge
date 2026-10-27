@@ -1,6 +1,9 @@
 {% extends "layout.njk" %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 
@@ -15,6 +18,10 @@
     <div class="govuk-grid-column-two-thirds">
       {% if successMessage %}
         {{ govukNotificationBanner({ type: "success", text: successMessage }) }}
+      {% endif %}
+
+      {% if errorSummary | length %}
+        {{ govukErrorSummary({ titleText: "There is a problem", errorList: errorSummary }) }}
       {% endif %}
 
       <span class="govuk-caption-l">Task</span>
@@ -41,6 +48,23 @@
           { key: { text: "Due" }, value: { html: dueHtml } },
           { key: { text: "Created" }, value: { text: task.createdText } }
         ]
+      }) }}
+
+      <form method="post" action="/tasks/{{ task.id }}/status" novalidate>
+        {{ govukRadios({
+          name: "status",
+          fieldset: { legend: { text: "Update status", classes: "govuk-fieldset__legend--m" } },
+          items: statusItems,
+          errorMessage: { text: errors.status } if errors.status
+        }) }}
+
+        {{ govukButton({ text: "Update status", preventDoubleClick: true }) }}
+      </form>
+
+      {{ govukButton({
+        text: "Delete task",
+        href: "/tasks/" + task.id + "/delete",
+        classes: "govuk-button--secondary"
       }) }}
     </div>
   </div>

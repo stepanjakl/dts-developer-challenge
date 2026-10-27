@@ -132,7 +132,7 @@ describe("creating a task", () => {
   });
 });
 
-describe("viewing a task", () => {
+describe("viewing and updating a task", () => {
   it("shows the task details", async () => {
     const created = await createTaskThroughForm();
 
@@ -143,11 +143,43 @@ describe("viewing a task", () => {
     expect(await findAccessibilityProblems(page.text)).toEqual([]);
   });
 
+  it("updates the status", async () => {
+    const created = await createTaskThroughForm();
+    const taskPath = created.headers.location.split("?")[0];
+
+    const updated = await request(app)
+      .post(`${taskPath}/status`)
+      .type("form")
+      .send({ status: "in_progress" });
+    const page = await request(app).get(updated.headers.location);
+
+    expect(updated.status).toBe(303);
+    expect(page.text).toContain("Status updated");
+    expect(page.text).toContain('value="in_progress" checked');
+  });
+
   it("shows a not found page for a task that does not exist", async () => {
     const response = await request(app).get("/tasks/00000000-0000-4000-8000-000000000000");
 
     expect(response.status).toBe(404);
     expect(response.text).toContain("Page not found");
+  });
+});
+
+describe("deleting a task", () => {
+  it("asks for confirmation, then deletes the task", async () => {
+    const created = await createTaskThroughForm();
+    const taskPath = created.headers.location.split("?")[0];
+
+    const confirmation = await request(app).get(`${taskPath}/delete`);
+    const deleted = await request(app).post(`${taskPath}/delete`);
+    const list = await request(app).get(deleted.headers.location);
+
+    expect(confirmation.text).toContain("Are you sure you want to delete this task?");
+    expect(await findAccessibilityProblems(confirmation.text)).toEqual([]);
+    expect(deleted.headers.location).toBe("/?success=deleted");
+    expect(list.text).toContain("Task deleted");
+    expect(list.text).toContain("There are no tasks.");
   });
 });
 

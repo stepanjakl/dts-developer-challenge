@@ -34,6 +34,15 @@ export class TasksClient {
     return readSaveResult(response);
   }
 
+  async updateTaskStatus(id: string, status: string): Promise<SaveResult> {
+    const response = await this.send("PATCH", `${taskPath(id)}/status`, { status });
+    return readSaveResult(response);
+  }
+
+  async deleteTask(id: string): Promise<void> {
+    await this.send("DELETE", taskPath(id));
+  }
+
   async send(method: string, path: string, body?: object): Promise<Response> {
     const request: RequestInit = { method, signal: AbortSignal.timeout(5000) };
     if (body) {

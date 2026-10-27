@@ -5,6 +5,7 @@ import {
   type FormErrors,
   parseDueAt,
   readTaskForm,
+  readText,
   type TaskForm,
   toErrorSummary,
   toFormErrors,
@@ -49,6 +50,29 @@ export function createTasksRouter(tasksClient: TasksClient): Router {
   router.get("/tasks/:id", async (request, response) => {
     const task = await tasksClient.getTask(request.params.id);
     renderTaskPage(response, task, {}, successMessageFor(request.query.success));
+  });
+
+  router.post("/tasks/:id/status", async (request, response) => {
+    const id = request.params.id;
+    const result = await tasksClient.updateTaskStatus(id, readText(request.body.status));
+
+    if (result.saved) {
+      response.redirect(303, `/tasks/${result.task.id}?success=status-updated`);
+      return;
+    }
+    const task = await tasksClient.getTask(id);
+    response.status(422);
+    renderTaskPage(response, task, toFormErrors(result.errors, {}));
+  });
+
+  router.get("/tasks/:id/delete", async (request, response) => {
+    const task = await tasksClient.getTask(request.params.id);
+    response.render("tasks/delete", { task: toTaskView(task, new Date()) });
+  });
+
+  router.post("/tasks/:id/delete", async (request, response) => {
+    await tasksClient.deleteTask(request.params.id);
+    response.redirect(303, "/?success=deleted");
   });
 
   return router;

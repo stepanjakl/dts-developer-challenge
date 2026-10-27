@@ -32,7 +32,7 @@ describe("statusRadioItems", () => {
 
 describe("successMessageFor", () => {
   it("only shows messages the service defines", () => {
-    expect(successMessageFor("created")).toBe("Task created");
+    expect(successMessageFor("deleted")).toBe("Task deleted");
     expect(successMessageFor("constructor")).toBeUndefined();
     expect(successMessageFor("<b>hacked</b>")).toBeUndefined();
   });

@@ -30,7 +30,11 @@ const statusTagClasses: Record<TaskStatus, string> = {
   done: "govuk-tag--green",
 };
 
-const successMessages = new Map([["created", "Task created"]]);
+const successMessages = new Map([
+  ["created", "Task created"],
+  ["status-updated", "Status updated"],
+  ["deleted", "Task deleted"],
+]);
 
 export function toTaskView(task: Task, now: Date): TaskView {
   return {
