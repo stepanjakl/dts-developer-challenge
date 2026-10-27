@@ -14,7 +14,10 @@
     "lint": "biome check .",
     "format": "biome check --write .",
     "test": "npm test --workspaces --if-present",
-    "check": "npm run typecheck && npm run lint && npm test"
+    "check": "npm run typecheck && npm run lint && npm test",
+    "db:generate": "npm run db:generate -w @tasks/api",
+    "db:migrate": "npm run db:migrate -w @tasks/api",
+    "db:studio": "npm run db:studio -w @tasks/api"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.3",

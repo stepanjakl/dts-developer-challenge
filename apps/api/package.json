@@ -1,0 +1,33 @@
+{
+  "name": "@tasks/api",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./create-app": "./src/create-app.ts",
+    "./test-database": "./src/testing/test-database.ts"
+  },
+  "scripts": {
+    "dev": "node --watch --env-file-if-exists=../../.env.local src/listen.ts",
+    "start": "node src/listen.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
+    "@tasks/contract": "*",
+    "drizzle-orm": "^0.45.4",
+    "express": "^5.3.0",
+    "helmet": "^8.3.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.12",
+    "@types/express": "^5.0.6",
+    "@types/supertest": "^7.2.1",
+    "drizzle-kit": "^0.31.11",
+    "supertest": "^7.3.1"
+  }
+}
