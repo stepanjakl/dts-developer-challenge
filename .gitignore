@@ -1,0 +1,8 @@
+node_modules
+.env*
+!.env.example
+.vercel
+apps/web/public
+apps/web/govuk-templates
+coverage
+.DS_Store

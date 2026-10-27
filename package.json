@@ -1,0 +1,25 @@
+{
+  "name": "hmcts-dts-task-manager",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "test": "npm test --workspaces --if-present",
+    "check": "npm run typecheck && npm run lint && npm test"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.3",
+    "@types/node": "^24.19.2",
+    "typescript": "^6.0.3",
+    "vitest": "^5.0.5"
+  }
+}
