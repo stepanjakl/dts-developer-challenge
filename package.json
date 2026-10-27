@@ -17,6 +17,7 @@
     "check": "npm run typecheck && npm run lint && npm test",
     "db:generate": "npm run db:generate -w @tasks/api",
     "db:migrate": "npm run db:migrate -w @tasks/api",
+    "db:seed": "npm run db:seed -w @tasks/api",
     "db:studio": "npm run db:studio -w @tasks/api"
   },
   "devDependencies": {
