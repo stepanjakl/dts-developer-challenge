@@ -18,6 +18,21 @@ describe("the API app", () => {
     expect(response.body).toEqual({ status: "ok" });
   });
 
+  it("serves the OpenAPI document", async () => {
+    const response = await request(app).get("/api/openapi.json");
+
+    expect(response.status).toBe(200);
+    expect(response.body.openapi).toBe("3.1.0");
+    expect(Object.keys(response.body.paths)).toContain("/tasks/{id}/status");
+  });
+
+  it("serves the API documentation page", async () => {
+    const response = await request(app).get("/api/docs");
+
+    expect(response.status).toBe(200);
+    expect(response.text).toContain("swagger-ui");
+  });
+
   it("answers unknown routes with a problem response", async () => {
     const response = await request(app).get("/api/unknown");
 

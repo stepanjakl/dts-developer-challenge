@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import helmet from "helmet";
 import type { Database } from "./db/client.ts";
+import { createDocsRouter } from "./docs/docs.routes.ts";
 import { errorHandler, notFoundHandler } from "./http/error-handler.ts";
 import { TasksRepository } from "./tasks/tasks.repository.ts";
 import { createTasksRouter } from "./tasks/tasks.routes.ts";
@@ -17,6 +18,7 @@ export function createApp(database: Database): Express {
     response.json({ status: "ok" });
   });
   app.use("/api/tasks", createTasksRouter(tasksService));
+  app.use("/api", createDocsRouter());
 
   app.use(notFoundHandler);
   app.use(errorHandler);
