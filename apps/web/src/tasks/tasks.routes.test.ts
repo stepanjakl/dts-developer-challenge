@@ -183,6 +183,47 @@ describe("deleting a task", () => {
   });
 });
 
+describe("security", () => {
+  it("blocks forms sent from another website", async () => {
+    const response = await request(app)
+      .post("/tasks")
+      .set("Sec-Fetch-Site", "cross-site")
+      .type("form")
+      .send(validForm);
+
+    expect(response.status).toBe(403);
+  });
+
+  it("blocks forms from another origin when the browser sends no Sec-Fetch-Site", async () => {
+    const response = await request(app)
+      .post("/tasks")
+      .set("Origin", "https://attacker.example")
+      .type("form")
+      .send(validForm);
+
+    expect(response.status).toBe(403);
+  });
+
+  it("allows forms sent from this website", async () => {
+    const response = await request(app)
+      .post("/tasks")
+      .set("Sec-Fetch-Site", "same-origin")
+      .type("form")
+      .send(validForm);
+
+    expect(response.status).toBe(303);
+  });
+
+  it("only runs scripts it has given a nonce to", async () => {
+    const response = await request(app).get("/");
+
+    const policy = response.headers["content-security-policy"];
+    const nonce = policy.split("'nonce-")[1].split("'")[0];
+    expect(response.text).toContain(`<script nonce="${nonce}">`);
+    expect(policy).toContain("frame-ancestors 'none'");
+  });
+});
+
 describe("when the API is unavailable", () => {
   it("shows a problem page", async () => {
     api.close();

@@ -11,6 +11,11 @@ export const problemPage = {
   message: "Try again later.",
 };
 
+export const forbiddenPage = {
+  heading: "Sorry, this request was blocked",
+  message: "Forms on this service can only be sent from this service.",
+};
+
 export function notFoundHandler(_request: Request, response: Response) {
   response.status(404).render("error", notFoundPage);
 }
