@@ -10,6 +10,8 @@
     "node": ">=24"
   },
   "scripts": {
+    "dev": "concurrently --names api,web --prefix-colors blue,green \"npm run dev -w @tasks/api\" \"npm run dev -w @tasks/web\"",
+    "build": "npm run build --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "biome check .",
     "format": "biome check --write .",
@@ -23,6 +25,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.6.3",
     "@types/node": "^24.19.2",
+    "concurrently": "^10.0.6",
     "typescript": "^6.0.3",
     "vitest": "^5.0.5"
   }

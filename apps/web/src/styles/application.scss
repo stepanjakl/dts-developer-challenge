@@ -1,0 +1,13 @@
+@use "pkg:govuk-frontend" with (
+  $govuk-font-family: var(--font-sans),
+  $govuk-include-default-font-face: false
+);
+
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, InterVariable, Inter, "Segoe UI", Helvetica, Arial,
+  sans-serif;
+}
+
+.app-preserve-line-breaks {
+  white-space: pre-line;
+}

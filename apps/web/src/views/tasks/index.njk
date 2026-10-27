@@ -1,0 +1,44 @@
+{% extends "layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% set pageTitle = "Tasks" %}
+
+{% block content %}
+  <h1 class="govuk-heading-l">Tasks</h1>
+
+  {{ govukButton({ text: "Create a task", href: "/tasks/new" }) }}
+
+  {% if tasks | length %}
+    <table class="govuk-table">
+      <caption class="govuk-table__caption govuk-visually-hidden">All tasks, soonest due first</caption>
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">Task</th>
+          <th scope="col" class="govuk-table__header">Status</th>
+          <th scope="col" class="govuk-table__header">Due</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+        {% for task in tasks %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+              <a class="govuk-link" href="/tasks/{{ task.id }}">{{ task.title }}</a>
+            </td>
+            <td class="govuk-table__cell">
+              {{ govukTag({ text: task.statusLabel, classes: task.statusTagClass }) }}
+            </td>
+            <td class="govuk-table__cell">
+              {{ task.dueText }}
+              {% if task.isOverdue %}
+                {{ govukTag({ text: "Overdue", classes: "govuk-tag--red" }) }}
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="govuk-body">There are no tasks.</p>
+  {% endif %}
+{% endblock %}

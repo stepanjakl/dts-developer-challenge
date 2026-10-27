@@ -1,0 +1,37 @@
+{% extends "govuk/template.njk" %}
+{% from "govuk/components/generic-header/macro.njk" import govukGenericHeader %}
+
+{% set serviceTitle = "Manage caseworker tasks" %}
+
+{% block pageTitle %}{{ "Error: " if errorSummary | length }}{{ pageTitle }} – {{ serviceTitle }}{% endblock %}
+
+{% block headIcons %}{% endblock %}
+
+{% block head %}
+  <link rel="stylesheet" href="/assets/application.css">
+{% endblock %}
+
+{% block govukHeader %}
+  {{ govukGenericHeader({ logoText: serviceTitle, url: "/" }) }}
+{% endblock %}
+
+{% block govukFooter %}
+  <div class="govuk-footer">
+    <div class="govuk-width-container">
+      <div class="govuk-footer__meta">
+        <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+          <h2 class="govuk-visually-hidden">Support links</h2>
+          <ul class="govuk-footer__inline-list">
+            <li class="govuk-footer__inline-list-item">
+              <a class="govuk-footer__link" href="/api/docs">API documentation</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="/assets/application.js"></script>
+{% endblock %}
