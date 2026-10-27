@@ -121,3 +121,53 @@ describe("GET /api/tasks/:id", () => {
     expect(response.status).toBe(404);
   });
 });
+
+describe("PATCH /api/tasks/:id/status", () => {
+  it("updates the status", async () => {
+    const created = await createTask({ title: "Call applicant", dueAt: nextWeek });
+
+    const response = await request(app)
+      .patch(`/api/tasks/${created.body.id}/status`)
+      .send({ status: "in_progress" });
+
+    expect(response.status).toBe(200);
+    expect(response.body.status).toBe("in_progress");
+    expect(response.body.updatedAt >= created.body.updatedAt).toBe(true);
+  });
+
+  it("rejects an invalid status", async () => {
+    const created = await createTask({ title: "Call applicant", dueAt: nextWeek });
+
+    const response = await request(app)
+      .patch(`/api/tasks/${created.body.id}/status`)
+      .send({ status: "finished" });
+
+    expect(response.status).toBe(422);
+  });
+
+  it("returns 404 for a task that does not exist", async () => {
+    const response = await request(app)
+      .patch(`/api/tasks/${unknownId}/status`)
+      .send({ status: "done" });
+
+    expect(response.status).toBe(404);
+  });
+});
+
+describe("DELETE /api/tasks/:id", () => {
+  it("deletes the task", async () => {
+    const created = await createTask({ title: "Call applicant", dueAt: nextWeek });
+
+    const response = await request(app).delete(`/api/tasks/${created.body.id}`);
+    const afterwards = await request(app).get(`/api/tasks/${created.body.id}`);
+
+    expect(response.status).toBe(204);
+    expect(afterwards.status).toBe(404);
+  });
+
+  it("returns 404 for a task that does not exist", async () => {
+    const response = await request(app).delete(`/api/tasks/${unknownId}`);
+
+    expect(response.status).toBe(404);
+  });
+});

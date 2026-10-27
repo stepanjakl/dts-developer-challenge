@@ -1,3 +1,4 @@
+import type { TaskStatus } from "@tasks/contract";
 import { asc, eq } from "drizzle-orm";
 import type { Database } from "../db/client.ts";
 import { type NewTaskRecord, type TaskRecord, tasks } from "../db/schema.ts";
@@ -21,5 +22,22 @@ export class TasksRepository {
   async insert(values: NewTaskRecord): Promise<TaskRecord> {
     const rows = await this.database.insert(tasks).values(values).returning();
     return rows[0];
+  }
+
+  async updateStatus(id: string, status: TaskStatus): Promise<TaskRecord | undefined> {
+    const rows = await this.database
+      .update(tasks)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(tasks.id, id))
+      .returning();
+    return rows[0];
+  }
+
+  async delete(id: string): Promise<boolean> {
+    const rows = await this.database
+      .delete(tasks)
+      .where(eq(tasks.id, id))
+      .returning({ id: tasks.id });
+    return rows.length > 0;
   }
 }
