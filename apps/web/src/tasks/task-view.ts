@@ -1,4 +1,10 @@
-import { isOverdue, type Task, type TaskStatus, taskStatusLabels } from "@tasks/contract";
+import {
+  isOverdue,
+  type Task,
+  type TaskStatus,
+  taskStatuses,
+  taskStatusLabels,
+} from "@tasks/contract";
 import { formatDateTime } from "../dates.ts";
 
 export type TaskView = {
@@ -12,11 +18,19 @@ export type TaskView = {
   isOverdue: boolean;
 };
 
+export type RadioItem = {
+  value: string;
+  text: string;
+  checked: boolean;
+};
+
 const statusTagClasses: Record<TaskStatus, string> = {
   todo: "govuk-tag--grey",
   in_progress: "",
   done: "govuk-tag--green",
 };
+
+const successMessages = new Map([["created", "Task created"]]);
 
 export function toTaskView(task: Task, now: Date): TaskView {
   return {
@@ -29,4 +43,23 @@ export function toTaskView(task: Task, now: Date): TaskView {
     createdText: formatDateTime(task.createdAt),
     isOverdue: isOverdue(task, now),
   };
+}
+
+export function statusRadioItems(selectedStatus: string): RadioItem[] {
+  const items: RadioItem[] = [];
+  for (const status of taskStatuses) {
+    items.push({
+      value: status,
+      text: taskStatusLabels[status],
+      checked: status === selectedStatus,
+    });
+  }
+  return items;
+}
+
+export function successMessageFor(key: unknown): string | undefined {
+  if (typeof key !== "string") {
+    return undefined;
+  }
+  return successMessages.get(key);
 }

@@ -1,10 +1,15 @@
 {% extends "layout.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% set pageTitle = "Tasks" %}
 
 {% block content %}
+  {% if successMessage %}
+    {{ govukNotificationBanner({ type: "success", text: successMessage }) }}
+  {% endif %}
+
   <h1 class="govuk-heading-l">Tasks</h1>
 
   {{ govukButton({ text: "Create a task", href: "/tasks/new" }) }}

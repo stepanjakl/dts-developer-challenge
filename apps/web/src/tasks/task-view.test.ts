@@ -1,6 +1,6 @@
 import type { Task } from "@tasks/contract";
 import { describe, expect, it } from "vitest";
-import { toTaskView } from "./task-view.ts";
+import { statusRadioItems, successMessageFor, toTaskView } from "./task-view.ts";
 
 const task: Task = {
   id: "2f1c5a6e-8b1d-4c3a-9f7e-1a2b3c4d5e6f",
@@ -19,5 +19,21 @@ describe("toTaskView", () => {
     expect(view.isOverdue).toBe(true);
     expect(view.statusLabel).toBe("To do");
     expect(view.dueText).toBe("1 March 2027 at 10:00am");
+  });
+});
+
+describe("statusRadioItems", () => {
+  it("checks the selected status", () => {
+    const checked = statusRadioItems("done").filter((item) => item.checked);
+
+    expect(checked).toEqual([{ value: "done", text: "Done", checked: true }]);
+  });
+});
+
+describe("successMessageFor", () => {
+  it("only shows messages the service defines", () => {
+    expect(successMessageFor("created")).toBe("Task created");
+    expect(successMessageFor("constructor")).toBeUndefined();
+    expect(successMessageFor("<b>hacked</b>")).toBeUndefined();
   });
 });

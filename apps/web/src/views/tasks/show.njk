@@ -1,0 +1,47 @@
+{% extends "layout.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% set pageTitle = task.title %}
+
+{% block beforeContent %}
+  {{ govukBackLink({ text: "Back to tasks", href: "/" }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% if successMessage %}
+        {{ govukNotificationBanner({ type: "success", text: successMessage }) }}
+      {% endif %}
+
+      <span class="govuk-caption-l">Task</span>
+      <h1 class="govuk-heading-l">{{ task.title }}</h1>
+
+      {% set statusHtml %}
+        {{ govukTag({ text: task.statusLabel, classes: task.statusTagClass }) }}
+      {% endset %}
+
+      {% set dueHtml %}
+        {{ task.dueText }}
+        {% if task.isOverdue %}
+          {{ govukTag({ text: "Overdue", classes: "govuk-tag--red" }) }}
+        {% endif %}
+      {% endset %}
+
+      {{ govukSummaryList({
+        rows: [
+          {
+            key: { text: "Description" },
+            value: { text: task.description or "No description", classes: "app-preserve-line-breaks" }
+          },
+          { key: { text: "Status" }, value: { html: statusHtml } },
+          { key: { text: "Due" }, value: { html: dueHtml } },
+          { key: { text: "Created" }, value: { text: task.createdText } }
+        ]
+      }) }}
+    </div>
+  </div>
+{% endblock %}
