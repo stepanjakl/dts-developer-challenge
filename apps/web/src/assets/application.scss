@@ -11,3 +11,13 @@
 .app-preserve-line-breaks {
   white-space: pre-line;
 }
+
+.app-time-input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: govuk-frontend.govuk-spacing(4);
+
+  .govuk-form-group {
+    margin-bottom: 0;
+  }
+}

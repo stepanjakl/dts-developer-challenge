@@ -3,6 +3,9 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/hint/macro.njk" import govukHint %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
@@ -47,29 +50,49 @@
         }) }}
 
         {{ govukDateInput({
-          id: "dueDate",
-          namePrefix: "dueDate",
+          id: "dueAt",
+          namePrefix: "dueAt",
           fieldset: { legend: { text: "Due date", classes: "govuk-fieldset__legend--m" } },
           hint: { text: "For example, 27 3 2027" },
-          errorMessage: { text: errors.dueDate } if errors.dueDate,
-          items: [
-            { name: "day", classes: "govuk-input--width-2", value: form.dueDateDay },
-            { name: "month", classes: "govuk-input--width-2", value: form.dueDateMonth },
-            { name: "year", classes: "govuk-input--width-4", value: form.dueDateYear }
-          ]
+          errorMessage: { text: dueDateError } if dueDateError,
+          day: { value: form.dueAtDay, error: dueDateError and "day" in dueAtErrorFields },
+          month: { value: form.dueAtMonth, error: dueDateError and "month" in dueAtErrorFields },
+          year: { value: form.dueAtYear, error: dueDateError and "year" in dueAtErrorFields }
         }) }}
 
-        {{ govukDateInput({
-          id: "dueTime",
-          namePrefix: "dueTime",
-          fieldset: { legend: { text: "Due time", classes: "govuk-fieldset__legend--m" } },
-          hint: { text: "Use the 24-hour clock, for example 14 30" },
-          errorMessage: { text: errors.dueTime } if errors.dueTime,
-          items: [
-            { name: "hour", classes: "govuk-input--width-2", value: form.dueTimeHour },
-            { name: "minute", classes: "govuk-input--width-2", value: form.dueTimeMinute }
-          ]
-        }) }}
+        <div class="govuk-form-group{% if dueTimeError %} govuk-form-group--error{% endif %}">
+          {% call govukFieldset({
+            legend: { text: "Due time", classes: "govuk-fieldset__legend--m" },
+            role: "group",
+            describedBy: "due-time-hint due-time-error" if dueTimeError else "due-time-hint"
+          }) %}
+            {{ govukHint({
+              id: "due-time-hint",
+              text: "Use UK time and the 24-hour clock. For example, 14 30"
+            }) }}
+            {% if dueTimeError %}
+              {{ govukErrorMessage({ id: "due-time-error", text: dueTimeError }) }}
+            {% endif %}
+            <div class="app-time-input">
+              {{ govukInput({
+                id: "dueAt-hour",
+                name: "dueAt-hour",
+                label: { text: "Hour" },
+                value: form.dueAtHour,
+                inputmode: "numeric",
+                classes: "govuk-input--width-2" + (" govuk-input--error" if dueTimeError and "hour" in dueAtErrorFields else "")
+              }) }}
+              {{ govukInput({
+                id: "dueAt-minute",
+                name: "dueAt-minute",
+                label: { text: "Minute" },
+                value: form.dueAtMinute,
+                inputmode: "numeric",
+                classes: "govuk-input--width-2" + (" govuk-input--error" if dueTimeError and "minute" in dueAtErrorFields else "")
+              }) }}
+            </div>
+          {% endcall %}
+        </div>
 
         <div class="govuk-button-group">
           {{ govukButton({ text: "Create task", preventDoubleClick: true }) }}

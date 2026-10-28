@@ -3,8 +3,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node scripts/build.ts && node --watch --env-file-if-exists=../../.env.local src/listen.ts",
-    "start": "node src/listen.ts",
+    "dev": "node scripts/build.ts && NODE_ENV=development node --watch --env-file-if-exists=../../.env.local src/index.ts",
+    "start": "node src/index.ts",
     "build": "node scripts/build.ts",
     "typecheck": "tsc --noEmit",
     "test": "node scripts/build.ts && vitest run"

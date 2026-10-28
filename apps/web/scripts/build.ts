@@ -1,3 +1,11 @@
+/*
+ * build.ts
+ * Role: Build script
+ *
+ * Compiles the Sass from src/assets into public/assets, copies the browser scripts there,
+ * and copies GOV.UK Frontend's templates into govuk-templates.
+ */
+
 import { copyFileSync, cpSync, mkdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -14,7 +22,7 @@ const govukFrontendFolder = path.join(
 
 mkdirSync(assetsFolder, { recursive: true });
 
-const styles = sass.compile(path.join(webFolder, "src", "styles", "application.scss"), {
+const styles = sass.compile(path.join(webFolder, "src", "assets", "application.scss"), {
   importers: [new sass.NodePackageImporter()],
   style: "compressed",
   quietDeps: true,
@@ -30,6 +38,7 @@ copyFileSync(
   path.join(assetsFolder, "application.js"),
 );
 
+// Copied into the app so Vercel bundles them
 rmSync(templatesFolder, { recursive: true, force: true });
 cpSync(govukFrontendFolder, templatesFolder, { recursive: true, filter: isFolderOrTemplate });
 
