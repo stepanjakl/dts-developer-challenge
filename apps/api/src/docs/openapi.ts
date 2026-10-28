@@ -1,10 +1,10 @@
+import { z } from "zod";
 import {
   createTaskSchema,
   problemSchema,
   taskSchema,
   updateTaskStatusSchema,
-} from "@tasks/contract";
-import { z } from "zod";
+} from "../tasks/tasks.contract.ts";
 
 const taskIdParameter = {
   name: "id",

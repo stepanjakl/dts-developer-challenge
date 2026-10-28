@@ -1,5 +1,5 @@
-import type { TaskStatus } from "@tasks/contract";
 import { loadConfig } from "../config.ts";
+import type { TaskStatus } from "../tasks/tasks.contract.ts";
 import { createDatabase } from "./client.ts";
 import { type NewTaskRecord, tasks } from "./schema.ts";
 

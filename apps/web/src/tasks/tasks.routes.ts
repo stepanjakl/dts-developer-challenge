@@ -1,4 +1,4 @@
-import type { Task } from "@tasks/contract";
+import type { Task } from "@tasks/api/tasks-contract";
 import { type Response, Router } from "express";
 import {
   emptyTaskForm,

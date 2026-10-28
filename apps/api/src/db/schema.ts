@@ -1,5 +1,5 @@
-import { taskStatuses } from "@tasks/contract";
 import { index, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import { taskStatuses } from "../tasks/tasks.contract.ts";
 
 export const taskStatus = pgEnum("task_status", taskStatuses);
 

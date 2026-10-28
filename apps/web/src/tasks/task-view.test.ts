@@ -1,4 +1,4 @@
-import type { Task } from "@tasks/contract";
+import type { Task } from "@tasks/api/tasks-contract";
 import { describe, expect, it } from "vitest";
 import { statusRadioItems, successMessageFor, toTaskView } from "./task-view.ts";
 

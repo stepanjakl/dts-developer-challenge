@@ -1,6 +1,6 @@
-import type { FieldError } from "@tasks/contract";
 import type { z } from "zod";
 import { ValidationError } from "../errors.ts";
+import type { FieldError } from "../tasks/tasks.contract.ts";
 
 export function validate<Schema extends z.ZodType>(
   schema: Schema,

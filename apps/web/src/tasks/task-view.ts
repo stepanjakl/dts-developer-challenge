@@ -4,7 +4,7 @@ import {
   type TaskStatus,
   taskStatuses,
   taskStatusLabels,
-} from "@tasks/contract";
+} from "@tasks/api/tasks-contract";
 import { formatDateTime } from "../dates.ts";
 
 export type TaskView = {

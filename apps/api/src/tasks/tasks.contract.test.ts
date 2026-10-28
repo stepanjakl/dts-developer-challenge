@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTaskSchema, isOverdue, type Task } from "./task.ts";
+import { createTaskSchema, isOverdue, type Task } from "./tasks.contract.ts";
 
 const task: Task = {
   id: "2f1c5a6e-8b1d-4c3a-9f7e-1a2b3c4d5e6f",

@@ -1,6 +1,6 @@
-import type { Problem } from "@tasks/contract";
 import type { NextFunction, Request, Response } from "express";
 import { NotFoundError, ValidationError } from "../errors.ts";
+import type { Problem } from "../tasks/tasks.contract.ts";
 
 type ClientError = Error & { status: number };
 

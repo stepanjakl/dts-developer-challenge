@@ -1,4 +1,4 @@
-import { type FieldError, problemSchema, type Task, taskSchema } from "@tasks/contract";
+import { type FieldError, problemSchema, type Task, taskSchema } from "@tasks/api/tasks-contract";
 import { z } from "zod";
 
 export type TaskSubmission = {

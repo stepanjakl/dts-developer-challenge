@@ -1,6 +1,6 @@
-import type { CreateTaskInput, Task, TaskStatus } from "@tasks/contract";
 import type { TaskRecord } from "../db/schema.ts";
 import { NotFoundError } from "../errors.ts";
+import type { CreateTaskInput, Task, TaskStatus } from "./tasks.contract.ts";
 import type { TasksRepository } from "./tasks.repository.ts";
 
 export class TasksService {

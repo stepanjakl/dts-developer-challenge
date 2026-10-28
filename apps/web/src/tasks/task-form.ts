@@ -1,4 +1,4 @@
-import type { FieldError } from "@tasks/contract";
+import type { FieldError } from "@tasks/api/tasks-contract";
 import { type CalendarDate, type ClockTime, isRealDate, ukDateTimeToIso } from "../dates.ts";
 
 export type TaskForm = {

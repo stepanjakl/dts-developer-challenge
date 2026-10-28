@@ -1,8 +1,8 @@
-import { createTaskSchema, updateTaskStatusSchema } from "@tasks/contract";
 import { Router } from "express";
 import { z } from "zod";
 import { NotFoundError } from "../errors.ts";
 import { validate } from "../http/validate.ts";
+import { createTaskSchema, updateTaskStatusSchema } from "./tasks.contract.ts";
 import type { TasksService } from "./tasks.service.ts";
 
 export function createTasksRouter(tasksService: TasksService): Router {

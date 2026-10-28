@@ -1,7 +1,7 @@
-import type { TaskStatus } from "@tasks/contract";
 import { asc, eq } from "drizzle-orm";
 import type { Database } from "../db/client.ts";
 import { type NewTaskRecord, type TaskRecord, tasks } from "../db/schema.ts";
+import type { TaskStatus } from "./tasks.contract.ts";
 
 export class TasksRepository {
   database: Database;

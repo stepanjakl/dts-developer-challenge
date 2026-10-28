@@ -1,4 +1,4 @@
-import type { FieldError } from "@tasks/contract";
+import type { FieldError } from "./tasks/tasks.contract.ts";
 
 export class NotFoundError extends Error {}
 
