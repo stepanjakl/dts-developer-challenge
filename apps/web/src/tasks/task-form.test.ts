@@ -59,10 +59,7 @@ describe("parseDueAt", () => {
 describe("toFormErrors", () => {
   it("puts API errors on the matching form fields", () => {
     const errors = toFormErrors(
-      [
-        { field: "title", message: "Enter a title" },
-        { field: "dueAt", message: "The due date must be in the future" },
-      ],
+      { title: "Enter a title", dueAt: "The due date must be in the future" },
       {},
     );
 
@@ -73,9 +70,12 @@ describe("toFormErrors", () => {
   });
 
   it("prefers the form's own date error over the API's", () => {
-    const errors = toFormErrors([{ field: "dueAt", message: "Enter a due date and time" }], {
-      dueDate: "Due date must include a day",
-    });
+    const errors = toFormErrors(
+      { dueAt: "Enter a due date and time" },
+      {
+        dueDate: "Due date must include a day",
+      },
+    );
 
     expect(errors).toEqual({ dueDate: "Due date must include a day" });
   });

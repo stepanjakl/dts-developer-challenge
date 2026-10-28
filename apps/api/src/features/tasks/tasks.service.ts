@@ -1,10 +1,17 @@
-import type { TaskRecord } from "../db/schema.ts";
-import { NotFoundError } from "../errors.ts";
+/*
+ * tasks.service.ts
+ * Role: Task operations
+ *
+ * Handles missing tasks, normalises input and maps stored records to API responses.
+ */
+
+import { NotFoundError } from "../../errors/not-found-error.ts";
 import type { CreateTaskInput, Task, TaskStatus } from "./tasks.contract.ts";
 import type { TasksRepository } from "./tasks.repository.ts";
+import type { TaskRecord } from "./tasks.table.ts";
 
 export class TasksService {
-  repository: TasksRepository;
+  private readonly repository: TasksRepository;
 
   constructor(repository: TasksRepository) {
     this.repository = repository;
@@ -12,7 +19,7 @@ export class TasksService {
 
   async listTasks(): Promise<Task[]> {
     const records = await this.repository.findAll();
-    return records.map(toTask);
+    return records.map(toTaskResponse);
   }
 
   async getTask(id: string): Promise<Task> {
@@ -20,7 +27,7 @@ export class TasksService {
     if (!record) {
       throw new NotFoundError(`Task ${id} was not found`);
     }
-    return toTask(record);
+    return toTaskResponse(record);
   }
 
   async createTask(input: CreateTaskInput): Promise<Task> {
@@ -30,7 +37,7 @@ export class TasksService {
       status: input.status,
       dueAt: new Date(input.dueAt),
     });
-    return toTask(record);
+    return toTaskResponse(record);
   }
 
   async updateTaskStatus(id: string, status: TaskStatus): Promise<Task> {
@@ -38,7 +45,7 @@ export class TasksService {
     if (!record) {
       throw new NotFoundError(`Task ${id} was not found`);
     }
-    return toTask(record);
+    return toTaskResponse(record);
   }
 
   async deleteTask(id: string): Promise<void> {
@@ -49,7 +56,7 @@ export class TasksService {
   }
 }
 
-function toTask(record: TaskRecord): Task {
+function toTaskResponse(record: TaskRecord): Task {
   return {
     id: record.id,
     title: record.title,

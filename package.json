@@ -6,7 +6,7 @@
     "apps/*"
   ],
   "engines": {
-    "node": ">=24"
+    "node": ">=24.2"
   },
   "scripts": {
     "dev": "concurrently --names api,web --prefix-colors blue,green \"npm run dev -w @tasks/api\" \"npm run dev -w @tasks/web\"",

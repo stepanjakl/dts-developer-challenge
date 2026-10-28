@@ -1,7 +1,14 @@
-import { loadConfig } from "../config.ts";
-import type { TaskStatus } from "../tasks/tasks.contract.ts";
-import { createDatabase } from "./client.ts";
-import { type NewTaskRecord, tasks } from "./schema.ts";
+/*
+ * tasks.seed.ts
+ * Role: Demo data
+ *
+ * Adds demo tasks when the database has none. Run with `npm run db:seed`.
+ */
+
+import { loadConfig } from "../../config.ts";
+import { createDatabase } from "../../db/client.ts";
+import type { TaskStatus } from "./tasks.contract.ts";
+import { type NewTaskRecord, tasks } from "./tasks.table.ts";
 
 const config = loadConfig(process.env);
 const database = createDatabase(config.databaseUrl);

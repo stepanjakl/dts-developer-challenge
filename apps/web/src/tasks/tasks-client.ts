@@ -1,4 +1,5 @@
-import { type FieldError, problemSchema, type Task, taskSchema } from "@tasks/api/tasks-contract";
+import { type FieldErrors, problemSchema } from "@tasks/api/problem-details";
+import { type Task, taskSchema } from "@tasks/api/tasks-contract";
 import { z } from "zod";
 
 export type TaskSubmission = {
@@ -8,7 +9,7 @@ export type TaskSubmission = {
   dueAt?: string;
 };
 
-export type SaveResult = { saved: true; task: Task } | { saved: false; errors: FieldError[] };
+export type SaveResult = { saved: true; task: Task } | { saved: false; errors: FieldErrors };
 
 export class TaskNotFoundError extends Error {}
 
@@ -69,7 +70,7 @@ async function readSaveResult(response: Response): Promise<SaveResult> {
   const body = await response.json();
   if (response.status === 422) {
     const problem = problemSchema.parse(body);
-    return { saved: false, errors: problem.errors ?? [] };
+    return { saved: false, errors: problem.errors ?? {} };
   }
   return { saved: true, task: taskSchema.parse(body) };
 }

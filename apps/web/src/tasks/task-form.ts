@@ -1,4 +1,4 @@
-import type { FieldError } from "@tasks/api/tasks-contract";
+import type { FieldErrors } from "@tasks/api/problem-details";
 import { type CalendarDate, type ClockTime, isRealDate, ukDateTimeToIso } from "../dates.ts";
 
 export type TaskForm = {
@@ -99,17 +99,21 @@ export function parseDueAt(form: TaskForm): DueAtResult {
   return { dueAt, errors };
 }
 
-export function toFormErrors(apiErrors: FieldError[], dueAtErrors: FormErrors): FormErrors {
+export function toFormErrors(apiErrors: FieldErrors, dueAtErrors: FormErrors): FormErrors {
   const errors: FormErrors = { ...dueAtErrors };
   const hasDueAtError = Boolean(dueAtErrors.dueDate || dueAtErrors.dueTime);
 
-  for (const error of apiErrors) {
-    if (error.field === "title" || error.field === "description" || error.field === "status") {
-      errors[error.field] = error.message;
-    }
-    if (error.field === "dueAt" && !hasDueAtError) {
-      errors.dueDate = error.message;
-    }
+  if (apiErrors.title) {
+    errors.title = apiErrors.title;
+  }
+  if (apiErrors.description) {
+    errors.description = apiErrors.description;
+  }
+  if (apiErrors.status) {
+    errors.status = apiErrors.status;
+  }
+  if (apiErrors.dueAt && !hasDueAtError) {
+    errors.dueDate = apiErrors.dueAt;
   }
   return errors;
 }

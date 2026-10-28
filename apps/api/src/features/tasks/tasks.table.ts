@@ -1,5 +1,12 @@
+/*
+ * tasks.table.ts
+ * Role: Database table
+ *
+ * Defines how tasks are stored. Run `npm run db:generate` after changing it.
+ */
+
 import { index, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
-import { taskStatuses } from "../tasks/tasks.contract.ts";
+import { taskStatuses } from "./tasks.contract.ts";
 
 export const taskStatus = pgEnum("task_status", taskStatuses);
 

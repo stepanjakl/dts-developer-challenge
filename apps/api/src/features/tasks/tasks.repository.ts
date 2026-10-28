@@ -1,10 +1,17 @@
+/*
+ * tasks.repository.ts
+ * Role: Database access
+ *
+ * Runs task queries and returns database records to the task service.
+ */
+
 import { asc, eq } from "drizzle-orm";
-import type { Database } from "../db/client.ts";
-import { type NewTaskRecord, type TaskRecord, tasks } from "../db/schema.ts";
+import type { Database } from "../../db/client.ts";
 import type { TaskStatus } from "./tasks.contract.ts";
+import { type NewTaskRecord, type TaskRecord, tasks } from "./tasks.table.ts";
 
 export class TasksRepository {
-  database: Database;
+  private readonly database: Database;
 
   constructor(database: Database) {
     this.database = database;
@@ -21,7 +28,11 @@ export class TasksRepository {
 
   async insert(values: NewTaskRecord): Promise<TaskRecord> {
     const rows = await this.database.insert(tasks).values(values).returning();
-    return rows[0];
+    const record = rows[0];
+    if (!record) {
+      throw new Error("Task insert did not return the created record");
+    }
+    return record;
   }
 
   async updateStatus(id: string, status: TaskStatus): Promise<TaskRecord | undefined> {
