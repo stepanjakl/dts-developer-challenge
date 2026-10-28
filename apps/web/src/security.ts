@@ -7,6 +7,7 @@
 
 import { randomBytes } from "node:crypto";
 import type { NextFunction, Request, Response } from "express";
+import { recordPageData } from "./page-data/page-data-panel.ts";
 
 // --- Content Security Policy ---
 // The nonce lets GOV.UK Frontend's inline script run.
@@ -37,6 +38,7 @@ export function sameOriginOnly(request: Request, response: Response, next: NextF
     next();
     return;
   }
+  recordPageData("errors/forbidden", {});
   response.status(403).render("errors/forbidden");
 }
 

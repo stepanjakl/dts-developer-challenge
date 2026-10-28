@@ -12,6 +12,11 @@
   white-space: pre-line;
 }
 
+.app-page-data pre {
+  overflow-x: auto;
+  font-size: 14px;
+}
+
 .app-time-input {
   display: flex;
   flex-wrap: wrap;

@@ -13,6 +13,7 @@ import nunjucks from "nunjucks";
 import { errorHandler, notFoundHandler } from "./errors/error-pages.ts";
 import { TasksClient } from "./features/tasks/tasks.client.ts";
 import { createTasksRouter } from "./features/tasks/tasks.routes.ts";
+import { startPageData } from "./page-data/page-data-panel.ts";
 import { contentSecurityPolicy, sameOriginOnly } from "./security.ts";
 
 const publicFolder = fileURLToPath(new URL("../public", import.meta.url));
@@ -37,6 +38,7 @@ export function createApp(options: { apiUrl: string; redirectApiRequests?: boole
   app.use(helmet({ contentSecurityPolicy: false }));
   app.use(contentSecurityPolicy);
   app.use(express.static(publicFolder));
+  app.use(startPageData);
   app.use(express.urlencoded({ extended: false, limit: "10kb" }));
   app.use(sameOriginOnly);
 

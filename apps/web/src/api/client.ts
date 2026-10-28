@@ -2,12 +2,13 @@
  * client.ts
  * Role: API client
  *
- * Sends backend HTTP requests and handles their response statuses.
+ * Sends backend HTTP requests and records responses or failed attempts for the page.
  */
 
 import { type FieldErrors, problemSchema } from "@tasks/api/problem-details";
 import type { z } from "zod";
 import { NotFoundError } from "../errors/not-found-error.ts";
+import { recordApiCall, recordApiFailure } from "../page-data/page-data-panel.ts";
 
 // Shared request setup for calls to the backend
 export class ApiClient {
@@ -29,7 +30,15 @@ export class ApiClient {
       request.body = JSON.stringify(body);
     }
 
-    const response = await fetch(new URL(path, this.baseUrl), request);
+    const url = new URL(path, this.baseUrl);
+    let response: Response;
+    try {
+      response = await fetch(url, request);
+    } catch (error) {
+      recordApiFailure(method, url, body, error);
+      throw error;
+    }
+    await recordApiCall(method, url, body, response);
     if (response.ok || expectedErrorStatuses.includes(response.status)) {
       return response;
     }

@@ -55,6 +55,7 @@ it("creates, displays, updates and deletes a task through rendered pages", async
   expect(detail.text).toContain("Task created");
   expect(detail.text).toContain(validForm.description);
   expect(detail.text).toContain(`15 June ${validForm["dueAt-year"]} at 2:30pm`);
+  expect(detail.text).toContain("Page data");
   expect(await findAccessibilityProblems(detail.text)).toEqual([]);
   const list = await request(app).get("/");
   expect(list.text).toContain(validForm.title);
@@ -93,7 +94,7 @@ it("creates, displays, updates and deletes a task through rendered pages", async
   expect(missing.text).toContain("Page not found");
 });
 
-it("shows linked field errors, retains input and escapes HTML in the form", async () => {
+it("shows linked field errors, retains input and escapes HTML in the form and panel", async () => {
   const title = `<script>alert(1)</script>${"a".repeat(200)}`;
   const response = await request(app)
     .post("/tasks")
@@ -133,6 +134,9 @@ it("shows linked field errors, retains input and escapes HTML in the form", asyn
       "#status",
       "#dueAt-hour",
     ]);
+    const panel = document.querySelector(".app-page-data");
+    expect(panel?.textContent).toContain("Enter a due date and time");
+    expect(panel?.textContent).toContain(title);
   } finally {
     dom.window.close();
   }

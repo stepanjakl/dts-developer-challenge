@@ -7,6 +7,7 @@
  */
 
 import { Router } from "express";
+import { recordPageData } from "../../page-data/page-data-panel.ts";
 import { ukDateTimeToIso } from "../../utils/uk-date-time.ts";
 import type { TasksClient } from "./tasks.client.ts";
 import {
@@ -34,6 +35,7 @@ export function createTasksRouter(tasksClient: TasksClient): Router {
       tasks: tasks.map((task) => prepareTaskForDisplay(task, now)),
       successMessage: getSuccessMessage(request.query.success),
     };
+    recordPageData("tasks/views/index", viewData);
     response.render("tasks/views/index", viewData);
   });
 
@@ -44,6 +46,7 @@ export function createTasksRouter(tasksClient: TasksClient): Router {
       errorSummary: [],
       statusItems: buildStatusRadioItems(emptyTaskForm.status),
     };
+    recordPageData("tasks/views/new", viewData);
     response.render("tasks/views/new", viewData);
   });
 
@@ -82,6 +85,7 @@ export function createTasksRouter(tasksClient: TasksClient): Router {
       errorSummary: buildErrorSummary(errors, dueAtError?.fields[0]),
       statusItems: buildStatusRadioItems(form.status),
     };
+    recordPageData("tasks/views/new", viewData);
     response.status(422).render("tasks/views/new", viewData);
   });
 
@@ -94,6 +98,7 @@ export function createTasksRouter(tasksClient: TasksClient): Router {
       statusItems: buildStatusRadioItems(task.status),
       successMessage: getSuccessMessage(request.query.success),
     };
+    recordPageData("tasks/views/show", viewData);
     response.render("tasks/views/show", viewData);
   });
 
@@ -114,12 +119,14 @@ export function createTasksRouter(tasksClient: TasksClient): Router {
       errorSummary: buildErrorSummary(result.errors),
       statusItems: buildStatusRadioItems(task.status),
     };
+    recordPageData("tasks/views/show", viewData);
     response.status(422).render("tasks/views/show", viewData);
   });
 
   router.get("/tasks/:id/delete", async (request, response) => {
     const task = await tasksClient.getTask(request.params.id);
     const viewData = { task: prepareTaskForDisplay(task, new Date()) };
+    recordPageData("tasks/views/delete", viewData);
     response.render("tasks/views/delete", viewData);
   });
 

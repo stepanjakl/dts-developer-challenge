@@ -1,0 +1,26 @@
+<details class="govuk-details app-page-data">
+  <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text">Page data</span>
+  </summary>
+  <div class="govuk-details__text">
+    <h2 class="govuk-heading-s">Template</h2>
+    <p class="govuk-body"><code>{{ pageData.template }}</code></p>
+    <h2 class="govuk-heading-s">Data passed to the template</h2>
+    <pre>{{ pageData.data }}</pre>
+    <h2 class="govuk-heading-s">API calls while building this page</h2>
+    {% for call in pageData.apiCalls %}
+      <p class="govuk-body"><strong>{{ call.method }} {{ call.url }}</strong> → {% if call.status %}{{ call.status }}{% else %}Request failed{% endif %}</p>
+      {% if call.error %}
+        <p class="govuk-body-s">{{ call.error }}</p>
+      {% endif %}
+      {% if call.requestBody %}
+        <p class="govuk-body-s">Sent</p><pre>{{ call.requestBody }}</pre>
+      {% endif %}
+      {% if call.responseBody %}
+        <p class="govuk-body-s">Received</p><pre>{{ call.responseBody }}</pre>
+      {% endif %}
+    {% else %}
+      <p class="govuk-body">None</p>
+    {% endfor %}
+  </div>
+</details>

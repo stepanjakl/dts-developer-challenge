@@ -35,3 +35,9 @@
 {% block bodyEnd %}
   <script type="module" src="/assets/application.js"></script>
 {% endblock %}
+
+{% block containerEnd %}
+  {% if pageData %}
+    {% include "page-data/page-data-panel.njk" %}
+  {% endif %}
+{% endblock %}
