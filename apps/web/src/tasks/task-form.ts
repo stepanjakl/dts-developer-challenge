@@ -56,16 +56,20 @@ export function readText(value: unknown): string {
   return "";
 }
 
-export function readTaskForm(body: Record<string, unknown>): TaskForm {
+export function readTaskForm(body: unknown): TaskForm {
+  let fields: Record<string, unknown> = {};
+  if (typeof body === "object" && body !== null && !Array.isArray(body)) {
+    fields = body as Record<string, unknown>;
+  }
   return {
-    title: readText(body.title),
-    description: readText(body.description),
-    status: readText(body.status),
-    dueDateDay: readText(body["dueDate-day"]).trim(),
-    dueDateMonth: readText(body["dueDate-month"]).trim(),
-    dueDateYear: readText(body["dueDate-year"]).trim(),
-    dueTimeHour: readText(body["dueTime-hour"]).trim(),
-    dueTimeMinute: readText(body["dueTime-minute"]).trim(),
+    title: readText(fields.title),
+    description: readText(fields.description),
+    status: readText(fields.status),
+    dueDateDay: readText(fields["dueDate-day"]).trim(),
+    dueDateMonth: readText(fields["dueDate-month"]).trim(),
+    dueDateYear: readText(fields["dueDate-year"]).trim(),
+    dueTimeHour: readText(fields["dueTime-hour"]).trim(),
+    dueTimeMinute: readText(fields["dueTime-minute"]).trim(),
   };
 }
 

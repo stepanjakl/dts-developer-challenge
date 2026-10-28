@@ -54,7 +54,7 @@ export function createTasksRouter(tasksClient: TasksClient): Router {
 
   router.post("/tasks/:id/status", async (request, response) => {
     const id = request.params.id;
-    const result = await tasksClient.updateTaskStatus(id, readText(request.body.status));
+    const result = await tasksClient.updateTaskStatus(id, readText(request.body?.status));
 
     if (result.saved) {
       response.redirect(303, `/tasks/${result.task.id}?success=status-updated`);

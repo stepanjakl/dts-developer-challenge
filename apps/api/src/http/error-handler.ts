@@ -4,6 +4,12 @@ import { NotFoundError, ValidationError } from "../errors.ts";
 
 type ClientError = Error & { status: number };
 
+const clientErrorTitles: Record<number, string> = {
+  400: "Bad request",
+  413: "Content too large",
+  415: "Unsupported media type",
+};
+
 export function notFoundHandler(request: Request, response: Response) {
   sendProblem(response, {
     title: "Not found",
@@ -29,7 +35,11 @@ export function errorHandler(
   }
 
   if (isClientError(error)) {
-    sendProblem(response, { title: "Bad request", status: error.status, detail: error.message });
+    sendProblem(response, {
+      title: clientErrorTitles[error.status] ?? "Bad request",
+      status: error.status,
+      detail: "The request body could not be read",
+    });
     return;
   }
 

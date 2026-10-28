@@ -11,6 +11,11 @@ export const problemPage = {
   message: "Try again later.",
 };
 
+export const badRequestPage = {
+  heading: "There is a problem with your request",
+  message: "The form could not be read. Go back and try again.",
+};
+
 export const forbiddenPage = {
   heading: "Sorry, this request was blocked",
   message: "Forms on this service can only be sent from this service.",
@@ -30,6 +35,22 @@ export function errorHandler(
     response.status(404).render("error", notFoundPage);
     return;
   }
+
+  const clientErrorStatus = findClientErrorStatus(error);
+  if (clientErrorStatus) {
+    response.status(clientErrorStatus).render("error", badRequestPage);
+    return;
+  }
+
   console.error(error);
   response.status(500).render("error", problemPage);
+}
+
+function findClientErrorStatus(error: unknown): number | undefined {
+  if (error instanceof Error && "status" in error && typeof error.status === "number") {
+    if (error.status >= 400 && error.status < 500) {
+      return error.status;
+    }
+  }
+  return undefined;
 }
