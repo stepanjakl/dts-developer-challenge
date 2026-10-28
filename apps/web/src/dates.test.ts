@@ -13,6 +13,18 @@ describe("ukDateTimeToIso", () => {
       "2027-07-15T08:00:00.000Z",
     );
   });
+
+  it("rejects a time skipped when the clocks go forward", () => {
+    expect(ukDateTimeToIso({ year: 2027, month: 3, day: 28 }, { hour: 1, minute: 30 })).toBe(
+      undefined,
+    );
+  });
+
+  it("uses GMT for the hour repeated when the clocks go back", () => {
+    expect(ukDateTimeToIso({ year: 2027, month: 10, day: 31 }, { hour: 1, minute: 30 })).toBe(
+      "2027-10-31T01:30:00.000Z",
+    );
+  });
 });
 
 describe("formatDateTime", () => {

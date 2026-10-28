@@ -85,7 +85,14 @@ export function parseDueAt(form: TaskForm): DueAtResult {
   if (typeof date === "string" || typeof time === "string") {
     return { errors };
   }
-  return { dueAt: ukDateTimeToIso(date, time), errors };
+
+  const dueAt = ukDateTimeToIso(date, time);
+  if (dueAt === undefined) {
+    errors.dueTime =
+      "Due time does not exist in UK time because the clocks go forward. Enter a time before 1am or from 2am";
+    return { errors };
+  }
+  return { dueAt, errors };
 }
 
 export function toFormErrors(apiErrors: FieldError[], dueAtErrors: FormErrors): FormErrors {

@@ -10,9 +10,15 @@ const dateTimeFormat = new Intl.DateTimeFormat("en-GB", {
   hour12: true,
 });
 
-const timeZoneNameFormat = new Intl.DateTimeFormat("en-GB", {
+const localDateTimeFormat = new Intl.DateTimeFormat("en-GB", {
   timeZone: ukTimeZone,
-  timeZoneName: "shortOffset",
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+  second: "numeric",
+  hourCycle: "h23",
 });
 
 export type CalendarDate = {
@@ -44,17 +50,29 @@ export function isRealDate(date: CalendarDate): boolean {
   );
 }
 
-export function ukDateTimeToIso(date: CalendarDate, time: ClockTime): string {
+export function ukDateTimeToIso(date: CalendarDate, time: ClockTime): string | undefined {
   const asIfUtc = Date.UTC(date.year, date.month - 1, date.day, time.hour, time.minute);
-  const offsetMinutes = ukOffsetMinutes(new Date(asIfUtc));
-  return new Date(asIfUtc - offsetMinutes * 60 * 1000).toISOString();
+  // During the repeated autumn hour, this offset selects the later occurrence in GMT.
+  const offset = ukOffsetMilliseconds(new Date(asIfUtc));
+  const candidate = new Date(asIfUtc - offset);
+  if (candidate.getTime() + ukOffsetMilliseconds(candidate) !== asIfUtc) {
+    return undefined;
+  }
+  return candidate.toISOString();
 }
 
-function ukOffsetMinutes(instant: Date): number {
-  for (const part of timeZoneNameFormat.formatToParts(instant)) {
-    if (part.type === "timeZoneName" && part.value === "GMT+1") {
-      return 60;
-    }
+function ukOffsetMilliseconds(instant: Date): number {
+  const parts: Record<string, number> = {};
+  for (const part of localDateTimeFormat.formatToParts(instant)) {
+    parts[part.type] = Number(part.value);
   }
-  return 0;
+  const localAsUtc = Date.UTC(
+    parts.year,
+    parts.month - 1,
+    parts.day,
+    parts.hour,
+    parts.minute,
+    parts.second,
+  );
+  return localAsUtc - instant.getTime();
 }
